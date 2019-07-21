@@ -26,6 +26,17 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
         reset();
     }
 
+    public void reset() {
+        this.player = new Player(1,1,0, 0,10,10);
+        this.goal = new Goal(this.frameWidth * 0.8, this.frameHeight * 0.8, 0, 0, 30, 30);
+        this.player.setColor(Color.BLACK);
+        this.goal.setColor(Color.GREEN);
+        this.timer.start();
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -47,22 +58,10 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
         }
         if (player.isCollision(goal)) {
             this.timer.stop();
-            System.out.println("yeet");
             JOptionPane.showMessageDialog(this, "Congrats, you beat the level!");
             reset();
         }
         repaint();
-    }
-
-    public void reset() {
-        this.player = new Player(1,1,0, 0,10,10);
-        this.goal = new Goal(this.frameWidth * 0.8, this.frameHeight * 0.8, 0, 0, 30, 30);
-        this.player.setColor(Color.BLACK);
-        this.goal.setColor(Color.GREEN);
-        this.timer.start();
-        addKeyListener(this);
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
     }
 
     private boolean keepYInBounds() {

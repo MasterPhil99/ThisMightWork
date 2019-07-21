@@ -10,9 +10,10 @@ public class Testo {
         DrawSpace ds = new DrawSpace(new Double(frameWidth), new Double(frameHeight));
         JFrame frame = new JFrame();
         frame.add(ds);
-        frame.setVisible(true);
         frame.setSize(frameWidth, frameHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Crazy shit yo");
+        frame.setResizable(false);
+        frame.setVisible(true);
     }
 }
