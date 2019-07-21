@@ -16,6 +16,8 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
     Timer timer = new Timer(5, this);
     Player player;
     Goal goal;
+    GameObject obstacle;
+    GameObject obstacle2;
     double frameWidth;
     double frameHeight;
 
@@ -29,6 +31,8 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
     public void reset() {
         this.player = new Player(1,1,0, 0,10,10);
         this.goal = new Goal(this.frameWidth * 0.8, this.frameHeight * 0.8, 0, 0, 30, 30);
+        this.obstacle = new GameObject(this.frameWidth * 0.5, 0, 0, 0, 5, this.frameHeight * 0.5);
+        this.obstacle2 = new GameObject(this.frameWidth * 0.5, this.frameHeight * 0.6, 0, 0, 5, this.frameHeight);
         this.player.setColor(Color.BLACK);
         this.goal.setColor(Color.GREEN);
         this.timer.start();
@@ -42,10 +46,16 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
         Graphics2D g2 = (Graphics2D) g;
         Rectangle2D pl = new Rectangle2D.Double(player.getxPosition(), player.getyPosition(), player.getWidth(), player.getHeight());
         Rectangle2D go = new Rectangle2D.Double(goal.getxPosition(), goal.getyPosition(), goal.getWidth(), goal.getHeight());
+        Rectangle2D obst = new Rectangle2D.Double(obstacle.getxPosition(), obstacle.getyPosition(), obstacle.getWidth(), obstacle.getHeight());
+        Rectangle2D obst2 = new Rectangle2D.Double(obstacle2.getxPosition(), obstacle2.getyPosition(), obstacle2.getWidth(), obstacle2.getHeight());
         g2.setColor(player.getColor());
         g2.fill(pl);
         g2.setColor(goal.getColor());
         g2.fill(go);
+        g2.setColor(Color.BLACK);
+        g2.fill(obst);
+        g2.setColor(Color.BLACK);
+        g2.fill(obst2);
     }
 
     @Override
@@ -61,7 +71,17 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
             JOptionPane.showMessageDialog(this, "Congrats, you beat the level!");
             reset();
         }
+        collisionDetection(obstacle);
+        collisionDetection(obstacle2);
+
         repaint();
+    }
+
+    public void collisionDetection(GameObject obj){
+        if (player.isCollision(obj)) {
+            player.setxPosition(player.getxPosition() - player.getxVelocity());
+            player.setyPosition(player.getyPosition() - player.getyVelocity());
+        }
     }
 
     private boolean keepYInBounds() {
