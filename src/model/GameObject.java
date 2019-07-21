@@ -9,7 +9,7 @@ public class GameObject {
     private double yVelocity;
     private double width;
     private double height;
-    private int color;
+    private Color color;
 
     public GameObject(double xPosition, double yPosition, double xVelocity, double yVelocity, double width, double height) {
         this.xPosition = xPosition;
@@ -68,15 +68,20 @@ public class GameObject {
         this.height = height;
     }
 
-    public int getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
     public Rectangle.Double getBounds() {
         return new Rectangle.Double(this.xPosition, this.yPosition, this.width, this.height);
+    }
+
+    public boolean isCollision(GameObject object) {
+        if (this.getBounds().intersects(object.getBounds())) return true;
+        else return false;
     }
 }

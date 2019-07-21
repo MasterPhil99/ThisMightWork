@@ -1,5 +1,7 @@
 package view;
 
+import model.GameObject;
+import model.Goal;
 import model.Player;
 
 import javax.swing.*;
@@ -13,40 +15,26 @@ import java.awt.geom.Rectangle2D;
 public class DrawSpace extends JPanel implements ActionListener, KeyListener {
     Timer timer = new Timer(5, this);
     Player player;
-    double xPosition = 1;
-    double yPosition = 1;
-    double xVelocity = 0;
-    double yVelocity = 0;
-    double width = 10;
-    double height = 10;
-    int frameWidth;
-    int frameHeight;
+    Goal goal;
+    double frameWidth;
+    double frameHeight;
 
-    public DrawSpace(int frameWidth, int frameHeight) {
-        this.player = new Player(this.xPosition, this.yPosition, this.xVelocity, this.yVelocity, this.width, this.height);
-        this.timer.start();
+
+    public DrawSpace(double frameWidth, double frameHeight) {
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
-        addKeyListener(this);
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
-    }
-
-    public DrawSpace(int frameWidth, int frameHeight, Player player) {
-        this.player = player;
-        this.timer.start();
-        this.frameWidth = frameWidth;
-        this.frameHeight = frameHeight;
-        addKeyListener(this);
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
+        reset();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         Rectangle2D pl = new Rectangle2D.Double(player.getxPosition(), player.getyPosition(), player.getWidth(), player.getHeight());
+        Rectangle2D go = new Rectangle2D.Double(goal.getxPosition(), goal.getyPosition(), goal.getWidth(), goal.getHeight());
+        g2.setColor(player.getColor());
         g2.fill(pl);
+        g2.setColor(goal.getColor());
+        g2.fill(go);
     }
 
     @Override
@@ -57,7 +45,24 @@ public class DrawSpace extends JPanel implements ActionListener, KeyListener {
         if (keepYInBounds()) {
             player.setyPosition(player.getyPosition() + player.getyVelocity());
         }
+        if (player.isCollision(goal)) {
+            this.timer.stop();
+            System.out.println("yeet");
+            JOptionPane.showMessageDialog(this, "Congrats, you beat the level!");
+            reset();
+        }
         repaint();
+    }
+
+    public void reset() {
+        this.player = new Player(1,1,0, 0,10,10);
+        this.goal = new Goal(this.frameWidth * 0.8, this.frameHeight * 0.8, 0, 0, 30, 30);
+        this.player.setColor(Color.BLACK);
+        this.goal.setColor(Color.GREEN);
+        this.timer.start();
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
     }
 
     private boolean keepYInBounds() {
